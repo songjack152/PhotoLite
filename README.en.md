@@ -1,36 +1,33 @@
-# PhotoLite
+<div align="center">
+  <img src="PhotoSwipeCleaner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" width="96" alt="PhotoLite icon">
+  <h1>PhotoLite</h1>
+  <p>A local-first, gesture-driven photo review and cleanup app.</p>
+  <p>
+    <a href="README.md">简体中文</a>
+    ·
+    <a href="https://github.com/songjack152/PhotoLite/releases/tag/v1.0.0">Download 1.0.0</a>
+    ·
+    <a href="docs/INSTALL.md">Installation</a>
+    ·
+    <a href="docs/PRIVACY.md">Privacy</a>
+  </p>
+  <p>
+    <img src="https://img.shields.io/github/v/release/songjack152/PhotoLite?label=release" alt="Release">
+    <img src="https://img.shields.io/github/license/songjack152/PhotoLite" alt="License">
+    <img src="https://img.shields.io/badge/platform-iPhone%20%7C%20Android%20%7C%20macOS%20%7C%20Windows-blue" alt="Platforms">
+    <img src="https://img.shields.io/badge/privacy-local--first-34C759" alt="Local first">
+  </p>
+</div>
 
-[简体中文](README.md) | English
+## Overview
 
-PhotoLite is a local-first photo review and cleanup app. It helps you go through a photo library in small batches, use simple gestures to decide what to keep, and confirm deletion before anything is removed.
+PhotoLite helps you review and clean up a photo library quickly. It shuffles photos into small batches and lets you review them with simple gestures: swipe left for next photo, swipe right for previous photo, and swipe up to mark a photo for deletion. At the end of each batch, PhotoLite opens a second confirmation screen; photos are deleted only after explicit confirmation.
 
-The project currently contains a native SwiftUI iPhone app and a Flutter implementation for Android, macOS, and Windows.
+PhotoLite is useful for:
 
-## Versions
-
-| Version | Platform | Package | Status |
-| --- | --- | --- | --- |
-| PhotoLite 1.0.0 | Android | `PhotoLite-Android-preview.apk` | Preview build available |
-| PhotoLite 1.0.0 | macOS | `PhotoLite-macOS-release.dmg` | Preview build available |
-| PhotoLite 1.0.0 | iPhone | No GitHub package | Source available for Xcode, TestFlight, and App Store distribution |
-| PhotoLite 1.0.0 | Windows | No installer yet | Project files included, packaging validation pending |
-
-## Downloads
-
-The latest public preview build is available on the GitHub Releases page:
-
-[Download PhotoLite 1.0.0](https://github.com/songjack152/PhotoLite/releases/tag/v1.0.0)
-
-Available assets:
-
-- `PhotoLite-Android-preview.apk`
-- `PhotoLite-macOS-release.dmg`
-
-Notes:
-
-- The Android APK is a preview build signed with a temporary preview signing key. Future builds signed with a different key may require uninstalling the old preview build first.
-- The macOS DMG is not Developer ID signed or notarized yet. macOS may require right-clicking the app and choosing Open.
-- iPhone builds are not distributed through GitHub Releases. Use Xcode, TestFlight, or the App Store path.
+- People who want to clean up many photos quickly.
+- Users who prefer local processing without uploading photos.
+- Developers interested in photo permissions, gesture-based UI, SwiftUI, and cross-platform Flutter apps.
 
 ## Screenshots
 
@@ -46,67 +43,54 @@ The screenshots below are sample screens and do not include real user photos.
   <img src="docs/screenshots/macos.svg" alt="PhotoLite macOS screen" width="680">
 </p>
 
+## Downloads and Versions
+
+Latest version: `1.0.0`
+
+| Platform | Package | Status |
+| --- | --- | --- |
+| Android | `PhotoLite-Android-preview.apk` | Preview build available |
+| macOS | `PhotoLite-macOS-release.dmg` | Preview build available |
+| iPhone | Run with Xcode, then distribute with TestFlight or App Store | Source available |
+| Windows | No installer yet | Project files included |
+
+Download:
+
+[PhotoLite 1.0.0 Release](https://github.com/songjack152/PhotoLite/releases/tag/v1.0.0)
+
+See [docs/INSTALL.md](docs/INSTALL.md) for detailed installation instructions.
+
 ## Features
 
-- Batch-based photo review with adjustable batch size
-- Gesture-first workflow:
-  - swipe left for next photo
-  - swipe right for previous photo
-  - swipe up to mark for deletion
-- Second confirmation screen before deletion
-- Ability to unselect individual photos on the confirmation screen
-- Photo metadata display, including date, dimensions, file size, and location when available
-- Optional date-range filtering, such as recent month, three months, half year, one year, or five years
-- Optional haptic feedback on supported mobile devices
-- Keyboard support on macOS, including arrow keys and WASD
-- Local-first privacy model with no backend service
+- Batch-based photo review, defaulting to 10 photos per batch.
+- Swipe left for next photo, swipe right for previous photo, swipe up to mark for deletion.
+- Second confirmation screen before deletion.
+- Ability to unselect individual photos on the confirmation screen.
+- Photo metadata display, including date, dimensions, file size, and available location information.
+- Optional date-range filtering, such as recent month, three months, half year, one year, or five years.
+- Optional haptic feedback on supported mobile devices.
+- Keyboard support on macOS, including arrow keys and WASD.
+- Local-first design with no backend service.
 
-## Core Workflow
+## Deletion Safety
 
-PhotoLite reviews photos in adjustable batches:
+PhotoLite is designed to reduce accidental deletion:
 
-1. Load photos from the platform photo library or a selected folder.
-2. Shuffle and split photos into batches.
-3. Review photos one by one with gestures.
-4. Mark unwanted photos during the batch.
-5. Review marked photos at the end of the batch.
-6. Delete only after explicit confirmation.
+1. Gestures only review photos; they do not delete immediately.
+2. Swiping up only adds a photo to the pending deletion list.
+3. Each batch ends with a second confirmation screen.
+4. Individual photos can be unselected before deletion.
+5. Final deletion is performed through platform APIs or local file handling.
 
-The app is designed to reduce accidental deletion. A swipe only marks a photo; deletion requires a second confirmation step.
-
-## Platform Status
-
-| Platform | Implementation | Status |
-| --- | --- | --- |
-| iPhone | Native SwiftUI | Source available. Intended for local development, TestFlight, and future App Store distribution. |
-| Android | Flutter | Preview APK available in Releases. Uses Android media/photo permissions. |
-| macOS | Flutter | DMG available in Releases. Uses the system Photos library by default, with folder mode as a fallback. |
-| Windows | Flutter | Project files are included. Packaging and full validation are still pending. |
-
-## Development
-
-PhotoLite was built with AI-assisted development. The product direction, interaction details, and testing feedback came from the user, while AI assistance was used for implementation, UI iteration, release documentation, and safety review.
-
-The project still follows a normal engineering workflow: local builds, real-device testing, permission checks, second confirmation for deletion, and sensitive file scanning before publishing.
-
-## Installation
-
-End-user installation steps are maintained in [docs/INSTALL.md](docs/INSTALL.md).
-
-Short version:
-
-- Android: download the preview APK from Releases and allow installation from the browser or file manager if Android asks.
-- macOS: download the DMG from Releases, drag PhotoLite into Applications, then allow Photos access on first launch.
-- iPhone: build from Xcode for local testing, or distribute through TestFlight/App Store when using an Apple Developer account.
+Keep an external backup before cleaning important photos.
 
 ## Privacy
 
 PhotoLite is local-first:
 
+- Photos, thumbnails, EXIF, and location data are not uploaded.
 - No backend service is included.
-- Photos are not uploaded.
 - Photo metadata is used only for local display and filtering.
-- Deletion is performed through platform APIs or local file handling after user confirmation.
 - The repository does not include signing keys, provisioning profiles, keystores, local build outputs, APKs, DMGs, or archives.
 
 See [docs/PRIVACY.md](docs/PRIVACY.md) for more detail.
@@ -129,9 +113,7 @@ Requirements:
 
 - macOS
 - Xcode
-- An Apple Developer account for device distribution or TestFlight
-
-Open the project:
+- An Apple Developer account for device distribution, TestFlight, or App Store release
 
 ```bash
 open PhotoSwipeCleaner.xcodeproj
@@ -147,16 +129,9 @@ Requirements:
 - Android Studio and Android SDK for Android builds
 - Xcode for macOS/iOS-related Flutter builds
 
-Install dependencies:
-
 ```bash
 cd photolite_flutter
 flutter pub get
-```
-
-Run locally:
-
-```bash
 flutter run
 ```
 
@@ -182,14 +157,11 @@ Project scripts:
 
 Release signing material is intentionally not checked into the repository. Configure your own Android keystore, Apple signing team, Developer ID certificate, or store-managed signing outside the repo.
 
-## Safety Notes
+## AI-Assisted Development
 
-PhotoLite is a photo cleanup tool, not a backup tool.
+PhotoLite was built with AI-assisted development. Product direction, interaction details, and testing feedback came from the user, while AI assistance was used for implementation, UI iteration, release documentation, and safety review.
 
-- Review the confirmation screen before deleting.
-- Keep an external backup of important photos.
-- On Android preview builds, future updates may require reinstalling if the signing key changes.
-- On macOS, unsigned builds may show system security warnings.
+The project still follows a normal engineering workflow: local builds, real-device testing, permission checks, second confirmation for deletion, and sensitive file scanning before publishing.
 
 ## Documentation
 
@@ -199,17 +171,13 @@ PhotoLite is a photo cleanup tool, not a backup tool.
 - [Multiplatform release notes](docs/MULTIPLATFORM_RELEASE.md)
 - [Contributing](CONTRIBUTING.md)
 
-## Roadmap
+## Contributing
 
-- Stable Android signing and release workflow
-- macOS Developer ID signing and notarization
-- Windows packaging and validation
-- More complete screenshots and demo media
-- Stronger automated tests around deletion and confirmation flows
+Issues and pull requests are welcome. Before contributing, please make sure:
 
-## Author
-
-Maintained by [songjack152](https://github.com/songjack152).
+- Do not commit local photos, test media, or private data.
+- Do not commit signing certificates, keystores, provisioning profiles, or `.env` files.
+- Changes touching deletion flows must preserve the second confirmation step.
 
 ## License
 
