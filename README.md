@@ -1,87 +1,192 @@
 # PhotoLite
 
-PhotoLite 是一个本地优先的照片分组滑动清理 App。它把照片随机分成一组一组处理，通过手势快速筛选，只有在每组结束后的二次确认里再次确认，才会真正删除照片。
+PhotoLite is a local-first photo review and cleanup app. It helps you go through a photo library in small batches, use simple gestures to decide what to keep, and confirm deletion before anything is removed.
 
-## 项目结构
+The project currently contains a native SwiftUI iPhone app and a Flutter implementation for Android, macOS, and Windows.
 
-- `PhotoSwipeCleaner.xcodeproj`：原生 iPhone SwiftUI 版本，用于本地开发、TestFlight 和后续 App Store。
-- `PhotoSwipeCleaner/`：iOS 原生版源码。
-- `photolite_flutter/`：Flutter 跨平台版本，用于 Android、macOS、Windows。
-- `docs/`：发布、安装和多平台开发说明。
-- `scripts/`：本地打包脚本。
+## Downloads
 
-## 核心体验
+The latest public preview build is available on the GitHub Releases page:
 
-- 左滑：下一张
-- 右滑：上一张
-- 上滑：标记删除
-- 每组结束后进入二次确认，确认后才删除
-- 删除确认页可以取消单张照片的删除选择
-- 支持设置每组照片数量、照片时间范围、震动反馈等选项
-- macOS 版支持方向键和 WASD 操作
+[Download PhotoLite 1.0.0](https://github.com/songjack152/PhotoLite/releases/tag/v1.0.0)
 
-## 平台状态
+Available assets:
 
-| 平台 | 状态 | 说明 |
+- `PhotoLite-Android-preview.apk`
+- `PhotoLite-macOS-release.dmg`
+
+Notes:
+
+- The Android APK is a preview build signed with a temporary preview signing key. Future builds signed with a different key may require uninstalling the old preview build first.
+- The macOS DMG is not Developer ID signed or notarized yet. macOS may require right-clicking the app and choosing Open.
+- iPhone builds are not distributed through GitHub Releases. Use Xcode, TestFlight, or the App Store path.
+
+## Features
+
+- Batch-based photo review with adjustable batch size
+- Gesture-first workflow:
+  - swipe left for next photo
+  - swipe right for previous photo
+  - swipe up to mark for deletion
+- Second confirmation screen before deletion
+- Ability to unselect individual photos on the confirmation screen
+- Photo metadata display, including date, dimensions, file size, and location when available
+- Optional date-range filtering, such as recent month, three months, half year, one year, or five years
+- Optional haptic feedback on supported mobile devices
+- Keyboard support on macOS, including arrow keys and WASD
+- Local-first privacy model with no backend service
+
+## Core Workflow
+
+PhotoLite reviews photos in adjustable batches:
+
+1. Load photos from the platform photo library or a selected folder.
+2. Shuffle and split photos into batches.
+3. Review photos one by one with gestures.
+4. Mark unwanted photos during the batch.
+5. Review marked photos at the end of the batch.
+6. Delete only after explicit confirmation.
+
+The app is designed to reduce accidental deletion. A swipe only marks a photo; deletion requires a second confirmation step.
+
+## Platform Status
+
+| Platform | Implementation | Status |
 | --- | --- | --- |
-| iPhone | 原生 SwiftUI 版 | 用于本地开发、TestFlight 和后续 App Store |
-| Android | Flutter 版 | 可本地构建 APK；公开分发前需要配置 release signing |
-| macOS | Flutter 版 | 默认读取系统“照片”图库，也保留文件夹模式备用 |
-| Windows | Flutter 版 | 工程已保留 Windows 目录，后续在 Windows 设备上构建安装包 |
+| iPhone | Native SwiftUI | Source available. Intended for local development, TestFlight, and future App Store distribution. |
+| Android | Flutter | Preview APK available in Releases. Uses Android media/photo permissions. |
+| macOS | Flutter | DMG available in Releases. Uses the system Photos library by default, with folder mode as a fallback. |
+| Windows | Flutter | Project files are included. Packaging and full validation are still pending. |
 
-## 隐私和安全
+## Installation
 
-- 照片处理在本地完成，不上传服务器。
-- 删除采用“滑动标记 -> 组末二次确认 -> 系统删除流程”的模式。
-- iOS / macOS 使用系统相册权限。
-- 桌面文件夹模式只处理用户主动选择的文件夹。
-- 仓库不应提交本地构建产物、签名证书、Provisioning Profile、APK、DMG 或 Archive。
+End-user installation steps are maintained in [docs/INSTALL.md](docs/INSTALL.md).
 
-更详细的隐私说明见 `docs/PRIVACY.md`。
+Short version:
 
-## 本地构建
+- Android: download the preview APK from Releases and allow installation from the browser or file manager if Android asks.
+- macOS: download the DMG from Releases, drag PhotoLite into Applications, then allow Photos access on first launch.
+- iPhone: build from Xcode for local testing, or distribute through TestFlight/App Store when using an Apple Developer account.
 
-### iPhone 原生版
+## Privacy
 
-用 Xcode 打开：
+PhotoLite is local-first:
+
+- No backend service is included.
+- Photos are not uploaded.
+- Photo metadata is used only for local display and filtering.
+- Deletion is performed through platform APIs or local file handling after user confirmation.
+- The repository does not include signing keys, provisioning profiles, keystores, local build outputs, APKs, DMGs, or archives.
+
+See [docs/PRIVACY.md](docs/PRIVACY.md) for more detail.
+
+## Current Limitations
+
+- Android preview builds are not signed with a long-term production key yet.
+- macOS builds are not notarized yet, so the first launch may show a macOS security prompt.
+- Windows packaging is present in source form, but an official Windows installer has not been published yet.
+- Store distribution, automatic updates, and formal release signing are future work.
+
+## Project Structure
+
+```text
+PhotoSwipeCleaner.xcodeproj       Native iPhone SwiftUI project
+PhotoSwipeCleaner/                iOS source code
+photolite_flutter/                Flutter app for Android, macOS, and Windows
+docs/                             Installation, privacy, and release notes
+scripts/                          Local packaging scripts
+```
+
+## Build From Source
+
+### iPhone Native App
+
+Requirements:
+
+- macOS
+- Xcode
+- An Apple Developer account for device distribution or TestFlight
+
+Open the project:
 
 ```bash
 open PhotoSwipeCleaner.xcodeproj
 ```
 
-然后选择真机运行，或通过 `Product > Archive` 准备 TestFlight / App Store 上传。
+Run on a device from Xcode, or use Product > Archive for TestFlight/App Store preparation.
 
-### Flutter 版
+### Flutter App
+
+Requirements:
+
+- Flutter SDK
+- Android Studio and Android SDK for Android builds
+- Xcode for macOS/iOS-related Flutter builds
+
+Install dependencies:
 
 ```bash
 cd photolite_flutter
 flutter pub get
+```
 
-# Android APK
+Run locally:
+
+```bash
+flutter run
+```
+
+Build Android:
+
+```bash
+flutter build apk --debug
 flutter build apk --release
+```
 
-# macOS App
+Build macOS:
+
+```bash
 flutter build macos --release
 ```
 
-也可以使用项目脚本生成本地安装包：
+Project scripts:
 
 ```bash
 ./scripts/build_flutter_android_apk.sh
 ./scripts/build_flutter_macos_dmg.sh
 ```
 
-## 文档
+Release signing material is intentionally not checked into the repository. Configure your own Android keystore, Apple signing team, Developer ID certificate, or store-managed signing outside the repo.
 
-- `docs/INSTALL.md`：用户安装说明。
-- `docs/TESTFLIGHT_RELEASE.md`：iPhone TestFlight 发布清单。
-- `docs/MULTIPLATFORM_RELEASE.md`：Flutter 跨平台开发和打包说明。
-- `docs/PRIVACY.md`：隐私和本地处理说明。
+## Safety Notes
 
-## 开源协议
+PhotoLite is a photo cleanup tool, not a backup tool.
 
-本项目使用 MIT License，见 `LICENSE`。
+- Review the confirmation screen before deleting.
+- Keep an external backup of important photos.
+- On Android preview builds, future updates may require reinstalling if the signing key changes.
+- On macOS, unsigned builds may show system security warnings.
 
-## 贡献
+## Documentation
 
-欢迎提交 issue 和 pull request。开始前请先阅读 `CONTRIBUTING.md`。
+- [Installation](docs/INSTALL.md)
+- [Privacy](docs/PRIVACY.md)
+- [TestFlight release checklist](docs/TESTFLIGHT_RELEASE.md)
+- [Multiplatform release notes](docs/MULTIPLATFORM_RELEASE.md)
+- [Contributing](CONTRIBUTING.md)
+
+## Roadmap
+
+- Stable Android signing and release workflow
+- macOS Developer ID signing and notarization
+- Windows packaging and validation
+- More complete screenshots and demo media
+- Stronger automated tests around deletion and confirmation flows
+
+## Author
+
+Maintained by [songjack152](https://github.com/songjack152).
+
+## License
+
+PhotoLite is released under the [MIT License](LICENSE).

@@ -11,17 +11,22 @@
 不建议用 Xcode 真机安装作为公开分发方式。Xcode 真机安装适合开发调试，不适合普通用户安装。
 
 ## Android
-Android 版可以本地构建 APK。公开分发前应配置独立的 release signing key，避免把 debug 签名包当作正式安装包发布。
+GitHub Release 提供 Android preview APK。
 
-本地调试安装：
+预览版安装：
+
+1. 从 GitHub Release 下载 `PhotoLite-Android-preview.apk`。
+2. 首次安装时，Android 可能要求允许“安装未知来源应用”。
+3. 安装完成后打开 PhotoLite。
+4. 第一次打开时允许照片/媒体权限。
+
+当前 APK 使用 preview signing key。后续如果切换正式 release signing key，Android 设备可能需要先卸载旧 preview 版本再安装新版。
+
+本地调试构建：
 
 1. 进入 `photolite_flutter/`。
-2. 运行 `flutter build apk --debug`。
-3. 将生成的 `build/app/outputs/flutter-apk/app-debug.apk` 安装到 Android 设备。
-4. 首次安装时，Android 可能要求允许“安装未知来源应用”。
-5. 第一次打开时允许照片/媒体权限。
-
-面向普通用户的安装包应使用 release signing，并优先通过 Google Play 测试渠道或正式商店版本分发。
+2. 运行 `flutter build apk --debug` 或 `flutter build apk --release`。
+3. 如果要长期公开分发，请配置独立 release signing key，或使用 Google Play 签名。
 
 ## macOS
 GitHub Release 提供 DMG 预览版安装包。
