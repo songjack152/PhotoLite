@@ -9,6 +9,15 @@ PhotoLite 是一个本地优先的照片筛选和清理 App。它会把照片按
 - 原生 SwiftUI iPhone 版
 - Flutter 跨平台版，覆盖 Android、macOS，并保留 Windows 工程
 
+## 版本
+
+| 版本 | 平台 | 安装包 | 状态 |
+| --- | --- | --- | --- |
+| PhotoLite 1.0.0 | Android | `PhotoLite-Android-preview.apk` | 可下载预览版 |
+| PhotoLite 1.0.0 | macOS | `PhotoLite-macOS-release.dmg` | 可下载预览版 |
+| PhotoLite 1.0.0 | iPhone | 暂不提供 GitHub 安装包 | 源码可用，适合 Xcode / TestFlight / App Store |
+| PhotoLite 1.0.0 | Windows | 暂未发布安装包 | 工程已保留，等待后续打包验证 |
+
 ## 下载
 
 最新公开预览版在 GitHub Releases 页面：
@@ -25,6 +34,20 @@ PhotoLite 是一个本地优先的照片筛选和清理 App。它会把照片按
 - Android APK 使用临时 preview signing key 签名。后续如果切换正式签名，设备上可能需要先卸载旧预览版再安装新版。
 - macOS DMG 目前还没有 Developer ID 签名和 notarization。macOS 首次打开时可能需要右键 App，然后选择“打开”。
 - iPhone 安装包不通过 GitHub Release 分发。iPhone 版建议使用 Xcode 本机运行、TestFlight 或 App Store。
+
+## 截图
+
+以下为示例截图，不包含真实用户照片。
+
+<p>
+  <img src="docs/screenshots/review.svg" alt="PhotoLite 照片筛选界面" width="220">
+  <img src="docs/screenshots/confirm.svg" alt="PhotoLite 二次确认界面" width="220">
+  <img src="docs/screenshots/settings.svg" alt="PhotoLite 设置界面" width="220">
+</p>
+
+<p>
+  <img src="docs/screenshots/macos.svg" alt="PhotoLite macOS 界面" width="680">
+</p>
 
 ## 功能
 
@@ -63,6 +86,12 @@ PhotoLite 的删除流程强调避免误删：
 | macOS | Flutter | Release 页面已提供 DMG。默认读取系统“照片”图库，同时保留文件夹模式。 |
 | Windows | Flutter | 工程文件已包含。安装包和完整验证仍待完成。 |
 
+## 开发方式
+
+PhotoLite 采用 AI 协作开发完成，主要由用户提出产品方向、交互反馈和测试结果，再通过 AI 辅助进行代码实现、界面迭代、发布文档整理和安全检查。
+
+项目仍然遵循正常软件工程流程：本地构建、真机测试、权限检查、删除流程二次确认、开源前敏感信息扫描。
+
 ## 安装
 
 面向普通用户的安装步骤见 [docs/INSTALL.md](docs/INSTALL.md)。
@@ -84,13 +113,6 @@ PhotoLite 是本地优先工具：
 - 仓库不包含签名证书、Provisioning Profile、keystore、本地构建产物、APK、DMG 或 Archive。
 
 详细说明见 [docs/PRIVACY.md](docs/PRIVACY.md)。
-
-## 当前限制
-
-- Android 预览版还没有使用长期生产签名。
-- macOS 版本还没有 notarization，首次打开可能出现系统安全提示。
-- Windows 目前只有工程文件，还没有公开发布安装包。
-- 商店分发、自动更新和正式签名流程仍属于后续工作。
 
 ## 项目结构
 

@@ -6,6 +6,15 @@ PhotoLite is a local-first photo review and cleanup app. It helps you go through
 
 The project currently contains a native SwiftUI iPhone app and a Flutter implementation for Android, macOS, and Windows.
 
+## Versions
+
+| Version | Platform | Package | Status |
+| --- | --- | --- | --- |
+| PhotoLite 1.0.0 | Android | `PhotoLite-Android-preview.apk` | Preview build available |
+| PhotoLite 1.0.0 | macOS | `PhotoLite-macOS-release.dmg` | Preview build available |
+| PhotoLite 1.0.0 | iPhone | No GitHub package | Source available for Xcode, TestFlight, and App Store distribution |
+| PhotoLite 1.0.0 | Windows | No installer yet | Project files included, packaging validation pending |
+
 ## Downloads
 
 The latest public preview build is available on the GitHub Releases page:
@@ -22,6 +31,20 @@ Notes:
 - The Android APK is a preview build signed with a temporary preview signing key. Future builds signed with a different key may require uninstalling the old preview build first.
 - The macOS DMG is not Developer ID signed or notarized yet. macOS may require right-clicking the app and choosing Open.
 - iPhone builds are not distributed through GitHub Releases. Use Xcode, TestFlight, or the App Store path.
+
+## Screenshots
+
+The screenshots below are sample screens and do not include real user photos.
+
+<p>
+  <img src="docs/screenshots/review.svg" alt="PhotoLite photo review screen" width="220">
+  <img src="docs/screenshots/confirm.svg" alt="PhotoLite deletion confirmation screen" width="220">
+  <img src="docs/screenshots/settings.svg" alt="PhotoLite settings screen" width="220">
+</p>
+
+<p>
+  <img src="docs/screenshots/macos.svg" alt="PhotoLite macOS screen" width="680">
+</p>
 
 ## Features
 
@@ -60,6 +83,12 @@ The app is designed to reduce accidental deletion. A swipe only marks a photo; d
 | macOS | Flutter | DMG available in Releases. Uses the system Photos library by default, with folder mode as a fallback. |
 | Windows | Flutter | Project files are included. Packaging and full validation are still pending. |
 
+## Development
+
+PhotoLite was built with AI-assisted development. The product direction, interaction details, and testing feedback came from the user, while AI assistance was used for implementation, UI iteration, release documentation, and safety review.
+
+The project still follows a normal engineering workflow: local builds, real-device testing, permission checks, second confirmation for deletion, and sensitive file scanning before publishing.
+
 ## Installation
 
 End-user installation steps are maintained in [docs/INSTALL.md](docs/INSTALL.md).
@@ -81,13 +110,6 @@ PhotoLite is local-first:
 - The repository does not include signing keys, provisioning profiles, keystores, local build outputs, APKs, DMGs, or archives.
 
 See [docs/PRIVACY.md](docs/PRIVACY.md) for more detail.
-
-## Current Limitations
-
-- Android preview builds are not signed with a long-term production key yet.
-- macOS builds are not notarized yet, so the first launch may show a macOS security prompt.
-- Windows packaging is present in source form, but an official Windows installer has not been published yet.
-- Store distribution, automatic updates, and formal release signing are future work.
 
 ## Project Structure
 

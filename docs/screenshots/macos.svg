@@ -1,0 +1,28 @@
+<svg width="760" height="480" viewBox="0 0 760 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="760" height="480" rx="24" fill="#070708"/>
+  <rect x="18" y="18" width="724" height="444" rx="18" fill="#0B0B0D" stroke="#25252A"/>
+  <circle cx="42" cy="40" r="6" fill="#FF5F57"/>
+  <circle cx="62" cy="40" r="6" fill="#FFBD2E"/>
+  <circle cx="82" cy="40" r="6" fill="#28C840"/>
+  <rect x="42" y="70" width="82" height="38" rx="19" fill="#F7F7FA" fill-opacity=".13"/>
+  <text x="83" y="94" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="650">设置</text>
+  <rect x="305" y="62" width="150" height="52" rx="26" fill="#F7F7FA" fill-opacity=".13" stroke="#FFFFFF" stroke-opacity=".16"/>
+  <text x="380" y="84" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="650">2026年5月20日</text>
+  <text x="380" y="103" text-anchor="middle" fill="#FFFFFF" fill-opacity=".66" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="12">18:42</text>
+  <rect x="636" y="70" width="82" height="38" rx="19" fill="#F7F7FA" fill-opacity=".13"/>
+  <text x="677" y="94" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="650">分享</text>
+  <rect x="86" y="132" width="588" height="4" rx="2" fill="#FFFFFF" fill-opacity=".12"/>
+  <rect x="86" y="132" width="262" height="4" rx="2" fill="#0A84FF"/>
+  <g transform="translate(156 154) rotate(2 224 124)">
+    <rect width="448" height="248" rx="20" fill="#14202B"/>
+    <clipPath id="macPhoto"><rect width="448" height="248" rx="20"/></clipPath>
+    <g clip-path="url(#macPhoto)">
+      <rect width="448" height="248" fill="#112536"/>
+      <circle cx="360" cy="54" r="30" fill="#FFD36B"/>
+      <path d="M0 190C92 112 166 143 244 92C309 49 370 50 448 26V248H0V190Z" fill="#6F9CB2"/>
+      <path d="M0 218C95 163 155 184 248 138C319 103 388 110 448 90V248H0V218Z" fill="#D5DEE4"/>
+    </g>
+  </g>
+  <rect x="273" y="380" width="214" height="46" rx="23" fill="#F7F7FA" fill-opacity=".14" stroke="#FFFFFF" stroke-opacity=".14"/>
+  <text x="380" y="408" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="660">← / A 上一张 · W 删除 · D 下一张</text>
+</svg>

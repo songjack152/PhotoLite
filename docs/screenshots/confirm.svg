@@ -1,0 +1,48 @@
+<svg width="390" height="844" viewBox="0 0 390 844" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="390" height="844" rx="42" fill="#050506"/>
+  <rect x="18" y="18" width="354" height="808" rx="36" fill="#070708" stroke="#222226"/>
+  <text x="195" y="72" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">确认删除 3 张</text>
+  <text x="195" y="99" text-anchor="middle" fill="#FFFFFF" fill-opacity=".6" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="13">取消勾选即可保留照片</text>
+  <g transform="translate(28 132)">
+    <rect width="158" height="188" rx="20" fill="#15202A"/>
+    <clipPath id="thumb1"><rect width="158" height="188" rx="20"/></clipPath>
+    <g clip-path="url(#thumb1)">
+      <rect width="158" height="188" fill="#28394B"/>
+      <circle cx="119" cy="45" r="20" fill="#FFD36B"/>
+      <path d="M0 146C36 102 73 116 103 78C128 46 142 37 158 32V188H0V146Z" fill="#89AFC1"/>
+    </g>
+    <circle cx="130" cy="28" r="16" fill="#0A84FF"/>
+    <path d="M122 28l5 5 10-11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(204 132)">
+    <rect width="158" height="188" rx="20" fill="#201818"/>
+    <clipPath id="thumb2"><rect width="158" height="188" rx="20"/></clipPath>
+    <g clip-path="url(#thumb2)">
+      <rect width="158" height="188" fill="#3A2A2A"/>
+      <path d="M0 122C41 80 77 104 111 70C135 45 149 36 158 33V188H0V122Z" fill="#C59272"/>
+      <path d="M0 154C45 126 82 132 127 101C143 90 153 84 158 82V188H0V154Z" fill="#E4C8A8"/>
+    </g>
+    <circle cx="130" cy="28" r="16" fill="#0A84FF"/>
+    <path d="M122 28l5 5 10-11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(28 342)">
+    <rect width="158" height="188" rx="20" fill="#1C1D22"/>
+    <clipPath id="thumb3"><rect width="158" height="188" rx="20"/></clipPath>
+    <g clip-path="url(#thumb3)">
+      <rect width="158" height="188" fill="#263125"/>
+      <circle cx="39" cy="47" r="22" fill="#E9F5D0"/>
+      <path d="M0 140C30 106 70 114 98 83C124 54 145 53 158 53V188H0V140Z" fill="#82A06E"/>
+    </g>
+    <circle cx="130" cy="28" r="16" fill="#0A84FF"/>
+    <path d="M122 28l5 5 10-11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(204 342)">
+    <rect width="158" height="188" rx="20" fill="#151515" opacity=".45"/>
+    <rect x="1" y="1" width="156" height="186" rx="19" stroke="#FFFFFF" stroke-opacity=".22"/>
+    <circle cx="130" cy="28" r="15" stroke="#FFFFFF" stroke-opacity=".52" stroke-width="2"/>
+    <text x="79" y="99" text-anchor="middle" fill="#FFFFFF" fill-opacity=".46" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14">已取消删除</text>
+  </g>
+  <rect x="32" y="690" width="326" height="58" rx="29" fill="#FF453A"/>
+  <text x="195" y="725" text-anchor="middle" fill="#FFFFFF" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">删除照片</text>
+  <text x="195" y="779" text-anchor="middle" fill="#FFFFFF" fill-opacity=".72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="650">取消删除</text>
+</svg>
