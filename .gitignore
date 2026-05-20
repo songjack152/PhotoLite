@@ -1,0 +1,50 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Local build outputs
+DerivedData/
+build/
+release/
+*.app
+*.apk
+*.aab
+*.dmg
+*.ipa
+*.xcarchive
+
+# Xcode local state
+*.xcuserstate
+xcuserdata/
+*.moved-aside
+
+# Signing and secrets
+*.cer
+*.key
+*.p12
+*.mobileprovision
+*.provisionprofile
+*.keystore
+*.jks
+key.properties
+.env
+.env.*
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+coverage/
+*.log
+*.iml
+.idea/
+**/Flutter/ephemeral/
+**/Flutter/Generated.xcconfig
+**/Flutter/flutter_export_environment.sh
+**/ios/Flutter/.last_build_id
+**/android/local.properties
+**/Pods/
+**/.symlinks/
