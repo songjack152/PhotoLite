@@ -30,7 +30,7 @@
 简要结论：
 
 - 自己测试：Xcode 真机运行。
-- 朋友测试：TestFlight。
+- 外部测试：TestFlight。
 - 公开发布：App Store。
 - GitHub Release：不提供 iPhone 安装包。
 
