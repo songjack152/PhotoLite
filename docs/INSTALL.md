@@ -62,8 +62,27 @@ GitHub Release 提供 DMG 预览版安装包。
 5. 默认使用系统“照片”图库；也可以切换到文件夹模式。
 
 ## Windows
-Windows 版本还在准备中。
+Windows 版当前支持文件夹模式，需要在 Windows 机器上构建安装包或压缩包。
 
-1. 后续会在 Windows 机器上构建 `.exe` 或 `.msix`。
-2. 早期版本可能出现 SmartScreen 提示。
-3. Windows 首版会优先使用文件夹模式。
+当前使用方式：
+
+1. 安装 Flutter SDK、Visual Studio 2022，并勾选 Desktop development with C++。
+2. 进入 `photolite_flutter/`。
+3. 运行 `flutter build windows --release`。
+4. 构建结果位于 `photolite_flutter/build/windows/x64/runner/Release/`。
+5. 运行 `PhotoLite.exe`，首次使用时选择照片文件夹。
+
+也可以在仓库根目录的 Windows PowerShell 中运行：
+
+```powershell
+.\scripts\build_flutter_windows_zip.ps1
+```
+
+脚本会生成 `release/PhotoLite-Windows-release.zip`。
+
+说明：
+
+- Windows 版默认使用文件夹模式，不直接读取系统“照片”应用图库。
+- 删除前仍会进入二次确认页。
+- 确认删除后，优先移动到 Windows 回收站；如果回收站能力不可用，会退回到所选文件夹下的 `.photolite_trash`。
+- 早期未签名版本可能出现 SmartScreen 提示。

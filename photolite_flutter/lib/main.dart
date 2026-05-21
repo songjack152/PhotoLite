@@ -37,9 +37,13 @@ class PhotoLiteApp extends StatelessWidget {
 }
 
 enum ReviewAction { keep, previous, delete }
+
 enum SwipeDecision { none, keep, previous, delete }
+
 enum ScreenPhase { empty, reviewing, confirming, done }
+
 enum LibraryMode { auto, system, folder }
+
 enum PhotoDatePreference {
   oneMonth('近一个月'),
   threeMonths('近三个月'),
@@ -53,11 +57,27 @@ enum PhotoDatePreference {
 
   DateTime? cutoff(DateTime now) {
     return switch (this) {
-      PhotoDatePreference.oneMonth => DateTime(now.year, now.month - 1, now.day),
-      PhotoDatePreference.threeMonths => DateTime(now.year, now.month - 3, now.day),
-      PhotoDatePreference.sixMonths => DateTime(now.year, now.month - 6, now.day),
+      PhotoDatePreference.oneMonth => DateTime(
+        now.year,
+        now.month - 1,
+        now.day,
+      ),
+      PhotoDatePreference.threeMonths => DateTime(
+        now.year,
+        now.month - 3,
+        now.day,
+      ),
+      PhotoDatePreference.sixMonths => DateTime(
+        now.year,
+        now.month - 6,
+        now.day,
+      ),
       PhotoDatePreference.oneYear => DateTime(now.year - 1, now.month, now.day),
-      PhotoDatePreference.fiveYears => DateTime(now.year - 5, now.month, now.day),
+      PhotoDatePreference.fiveYears => DateTime(
+        now.year - 5,
+        now.month,
+        now.day,
+      ),
       PhotoDatePreference.all => null,
     };
   }
@@ -115,7 +135,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
   final Set<String> _markedDelete = {};
   final Set<String> _preservedInConfirm = {};
   final List<ReviewedAction> _history = [];
-  final FocusNode _reviewFocusNode = FocusNode(debugLabel: 'PhotoLite review keyboard');
+  final FocusNode _reviewFocusNode = FocusNode(
+    debugLabel: 'PhotoLite review keyboard',
+  );
   Timer? _hintTimer;
 
   PhotoItem? get _currentPhoto {
@@ -135,11 +157,23 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     return _currentGroup.where((e) => _markedDelete.contains(e.id)).toList();
   }
 
-  int get _groupProgressCount => _currentGroup.isEmpty ? 0 : (_currentIndex - (_groupIndex * _groupSize)) + 1;
+  int get _groupProgressCount => _currentGroup.isEmpty
+      ? 0
+      : (_currentIndex - (_groupIndex * _groupSize)) + 1;
 
   bool get _isAndroid => !kIsWeb && Platform.isAndroid;
   bool get _isMacOS => !kIsWeb && Platform.isMacOS;
-  bool get _usesSystemGallery => _isAndroid || _libraryMode == LibraryMode.system || (_isMacOS && _libraryMode == LibraryMode.auto);
+  bool get _isWindows => !kIsWeb && Platform.isWindows;
+  bool get _isDesktop => _isMacOS || _isWindows;
+  bool get _supportsHaptics =>
+      !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+  bool get _usesSystemGallery {
+    if (_isWindows) return false;
+    return _isAndroid ||
+        _libraryMode == LibraryMode.system ||
+        (_isMacOS && _libraryMode == LibraryMode.auto);
+  }
+
   @override
   void dispose() {
     _hintTimer?.cancel();
@@ -183,12 +217,21 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.photo_library_rounded, size: 54, color: Colors.white70),
+              const Icon(
+                Icons.photo_library_rounded,
+                size: 54,
+                color: Colors.white70,
+              ),
               const SizedBox(height: 16),
-              const Text('PhotoLite', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700)),
+              const Text(
+                'PhotoLite',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 10),
               Text(
-                _loading ? '正在加载照片...' : (_statusText.isEmpty ? subtitle : _statusText),
+                _loading
+                    ? '正在加载照片...'
+                    : (_statusText.isEmpty ? subtitle : _statusText),
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.white70, height: 1.4),
               ),
@@ -214,10 +257,14 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
   Widget _buildReviewState(BuildContext context) {
     final photo = _currentPhoto;
     if (photo == null) return const SizedBox.shrink();
-    final progressValue = _currentGroup.isEmpty ? 0.0 : (_groupProgressCount / _currentGroup.length).clamp(0.0, 1.0);
+    final progressValue = _currentGroup.isEmpty
+        ? 0.0
+        : (_groupProgressCount / _currentGroup.length).clamp(0.0, 1.0);
     final motionDuration = _disableNextMotionAnimation
         ? Duration.zero
-        : (_isAnimatingDecision ? const Duration(milliseconds: 210) : Duration.zero);
+        : (_isAnimatingDecision
+              ? const Duration(milliseconds: 210)
+              : Duration.zero);
 
     return Focus(
       focusNode: _reviewFocusNode,
@@ -237,7 +284,10 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
                   padding: const EdgeInsets.fromLTRB(16, 6, 16, 14),
                   child: Center(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 920, maxHeight: 1100),
+                      constraints: const BoxConstraints(
+                        maxWidth: 920,
+                        maxHeight: 1100,
+                      ),
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           return Column(
@@ -251,15 +301,26 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
                                       duration: motionDuration,
                                       curve: Curves.easeOutCubic,
                                       transformAlignment: Alignment.center,
-                                      transform: Matrix4.translationValues(_dragOffset.dx, _dragOffset.dy, 0)..rotateZ(_dragRotationRadians),
-                                      child: RepaintBoundary(child: photo.preview(context, fit: BoxFit.contain)),
+                                      transform: Matrix4.translationValues(
+                                        _dragOffset.dx,
+                                        _dragOffset.dy,
+                                        0,
+                                      )..rotateZ(_dragRotationRadians),
+                                      child: RepaintBoundary(
+                                        child: photo.preview(
+                                          context,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ),
                                     ),
                                     if (_showSwipeHint || _currentFirstHint)
                                       Positioned(
                                         left: 20,
                                         right: 20,
                                         top: 18,
-                                        child: Center(child: _swipeHintBanner()),
+                                        child: Center(
+                                          child: _swipeHintBanner(),
+                                        ),
                                       ),
                                   ],
                                 ),
@@ -288,15 +349,25 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
         children: [
           Expanded(
             child: deleteItems.isEmpty
-                ? const Center(child: Text('没有待删除照片', style: TextStyle(color: Colors.white70, fontSize: 17, fontWeight: FontWeight.w600)))
+                ? const Center(
+                    child: Text(
+                      '没有待删除照片',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  )
                 : GridView.builder(
                     padding: const EdgeInsets.fromLTRB(16, 18, 16, 16),
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 170,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 0.82,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 170,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 0.82,
+                        ),
                     itemCount: deleteItems.length,
                     itemBuilder: (context, index) {
                       final item = deleteItems[index];
@@ -322,8 +393,12 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
                                 top: 10,
                                 left: 10,
                                 child: Icon(
-                                  selected ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-                                  color: selected ? const Color(0xFF0A84FF) : Colors.white70,
+                                  selected
+                                      ? Icons.check_circle_rounded
+                                      : Icons.radio_button_unchecked_rounded,
+                                  color: selected
+                                      ? const Color(0xFF0A84FF)
+                                      : Colors.white70,
                                 ),
                               ),
                             ],
@@ -337,7 +412,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.34),
-              border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.08))),
+              border: Border(
+                top: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+              ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -346,21 +423,36 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFFF3B30),
                     minimumSize: const Size.fromHeight(58),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(17),
+                    ),
                   ),
                   onPressed: _busy ? null : _confirmDelete,
                   child: Text(
-                    _busy ? '正在删除...' : '删除 ${_activeDeleteGroup.length - _preservedInConfirm.length} 张照片',
-                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                    _busy
+                        ? '正在删除...'
+                        : '删除 ${_activeDeleteGroup.length - _preservedInConfirm.length} 张照片',
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 TextButton(
-                  onPressed: _busy ? null : () {
-                    _advanceToNextGroup();
-                    _hapticLight();
-                  },
-                  child: const Text('取消删除', style: TextStyle(color: Colors.white60, fontWeight: FontWeight.w600)),
+                  onPressed: _busy
+                      ? null
+                      : () {
+                          _advanceToNextGroup();
+                          _hapticLight();
+                        },
+                  child: const Text(
+                    '取消删除',
+                    style: TextStyle(
+                      color: Colors.white60,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -379,9 +471,16 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.check_circle_rounded, size: 64, color: Color(0xFF34C759)),
+              const Icon(
+                Icons.check_circle_rounded,
+                size: 64,
+                color: Color(0xFF34C759),
+              ),
               const SizedBox(height: 16),
-              const Text('本轮处理完成', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700)),
+              const Text(
+                '本轮处理完成',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 10),
               Text(
                 '已筛选 $_reviewedCount 张，删除 $_deletedCount 张，节省约 ${_formatBytes(_savedBytes)}。',
@@ -397,37 +496,74 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     );
   }
 
-  Widget _topBar(BuildContext context, {PhotoItem? photo, double progressValue = 0, String title = 'PhotoLite'}) {
+  Widget _topBar(
+    BuildContext context, {
+    PhotoItem? photo,
+    double progressValue = 0,
+    String title = 'PhotoLite',
+  }) {
     final dateText = photo == null ? title : photo.timeText.split(' ').first;
-    final timeText = photo == null ? _statusText : photo.timeText.split(' ').last;
+    final timeText = photo == null
+        ? _statusText
+        : photo.timeText.split(' ').last;
     return Container(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 14),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Colors.black.withValues(alpha: 0.82), Colors.black.withValues(alpha: 0)],
+          colors: [
+            Colors.black.withValues(alpha: 0.82),
+            Colors.black.withValues(alpha: 0),
+          ],
         ),
       ),
       child: Column(
         children: [
           Row(
             children: [
-              _glassButton(icon: Icons.settings_rounded, color: const Color(0xFF0A84FF), onTap: () => setState(() => _showSettings = true)),
+              _glassButton(
+                icon: Icons.settings_rounded,
+                color: const Color(0xFF0A84FF),
+                onTap: () => setState(() => _showSettings = true),
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 178, minWidth: 126),
+                    constraints: const BoxConstraints(
+                      maxWidth: 178,
+                      minWidth: 126,
+                    ),
                     child: _glassPanel(
                       radius: 18,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(dateText, textAlign: TextAlign.center, maxLines: 1, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                          Text(
+                            dateText,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                           const SizedBox(height: 1),
-                          Text(timeText, textAlign: TextAlign.center, maxLines: 1, style: const TextStyle(color: Colors.white70, fontSize: 11, fontWeight: FontWeight.w600)),
+                          Text(
+                            timeText,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -436,7 +572,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
               ),
               const SizedBox(width: 12),
               _glassButton(
-                icon: photo == null ? Icons.folder_open_rounded : Icons.ios_share_rounded,
+                icon: photo == null
+                    ? Icons.folder_open_rounded
+                    : Icons.ios_share_rounded,
                 color: photo == null ? Colors.white : const Color(0xFF0A84FF),
                 onTap: photo == null ? _startReview : _shareCurrentPhoto,
               ),
@@ -503,7 +641,11 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12, color: Colors.white70, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.white70,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
@@ -522,7 +664,11 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
               text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 12, color: Colors.white70, fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.white70,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -531,7 +677,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
   }
 
   Widget _swipeHintBanner() {
-    final text = _currentFirstHint ? '这是第一张' : (_statusText.isEmpty ? '左滑下一张 · 右滑上一张 · 上滑删除' : _statusText);
+    final text = _currentFirstHint
+        ? '这是第一张'
+        : (_statusText.isEmpty ? '左滑下一张 · 右滑上一张 · 上滑删除' : _statusText);
     final color = switch (text) {
       '删除' => const Color(0xFFFF453A),
       '下一张' => const Color(0xFF30D158),
@@ -552,13 +700,25 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
         children: [
           Icon(icon, size: 22, color: color),
           const SizedBox(width: 10),
-          Text(text, textAlign: TextAlign.center, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: color)),
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: color,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _glassButton({required IconData icon, required VoidCallback onTap, Color color = Colors.white}) {
+  Widget _glassButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    Color color = Colors.white,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(999),
@@ -590,7 +750,10 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.055),
             borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.16), width: 0.8),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.16),
+              width: 0.8,
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.28),
@@ -607,7 +770,7 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
 
   Widget _buildSettingsSheet(BuildContext context) {
     final screen = MediaQuery.of(context).size;
-    if (_isMacOS) {
+    if (_isDesktop) {
       return Positioned.fill(
         child: GestureDetector(
           onTap: () => setState(() => _showSettings = false),
@@ -632,9 +795,7 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     return Positioned.fill(
       child: Container(
         color: Colors.black,
-        child: SafeArea(
-          child: _settingsPanelContent(desktop: false),
-        ),
+        child: SafeArea(child: _settingsPanelContent(desktop: false)),
       ),
     );
   }
@@ -643,15 +804,30 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     return Column(
       children: [
         Padding(
-          padding: desktop ? const EdgeInsets.fromLTRB(18, 14, 12, 8) : const EdgeInsets.fromLTRB(16, 8, 10, 8),
+          padding: desktop
+              ? const EdgeInsets.fromLTRB(18, 14, 12, 8)
+              : const EdgeInsets.fromLTRB(16, 8, 10, 8),
           child: Row(
             children: [
               Expanded(
-                child: Text('设置', textAlign: desktop ? TextAlign.left : TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                child: Text(
+                  '设置',
+                  textAlign: desktop ? TextAlign.left : TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: () => setState(() => _showSettings = false),
-                child: Text(desktop ? '关闭' : '完成', style: const TextStyle(color: Color(0xFF0A84FF), fontWeight: FontWeight.w700)),
+                child: Text(
+                  desktop ? '关闭' : '完成',
+                  style: const TextStyle(
+                    color: Color(0xFF0A84FF),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
             ],
           ),
@@ -663,51 +839,74 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
               _settingsCard(
                 child: Column(
                   children: [
-                    _settingsRow(Icons.photo_library_outlined, '模式', _libraryModeLabel(), trailing: DropdownButton<LibraryMode>(
-                      value: _libraryMode,
-                      dropdownColor: const Color(0xFF1C1C1E),
-                      underline: const SizedBox.shrink(),
-                      onChanged: (value) {
-                        if (value == null) return;
-                        setState(() => _libraryMode = value);
-                      },
-                      items: const [
-                        DropdownMenuItem(value: LibraryMode.auto, child: Text('自动')),
-                        DropdownMenuItem(value: LibraryMode.system, child: Text('系统图库')),
-                        DropdownMenuItem(value: LibraryMode.folder, child: Text('文件夹')),
-                      ],
-                    )),
+                    _settingsRow(
+                      Icons.photo_library_outlined,
+                      '模式',
+                      _libraryModeLabel(),
+                      trailing: _libraryModePicker(),
+                    ),
                     if (_usesSystemGallery) ...[
                       _settingsDivider(),
-                      _settingsRow(Icons.calendar_month_rounded, '照片范围', _datePreference.label, trailing: DropdownButton<PhotoDatePreference>(
-                        value: _datePreference,
-                        dropdownColor: const Color(0xFF1C1C1E),
-                        underline: const SizedBox.shrink(),
-                        onChanged: (value) {
-                          if (value == null) return;
-                          _changeDatePreference(value);
-                        },
-                        items: PhotoDatePreference.values
-                            .map((value) => DropdownMenuItem(value: value, child: Text(value.label)))
-                            .toList(),
-                      )),
+                      _settingsRow(
+                        Icons.calendar_month_rounded,
+                        '照片范围',
+                        _datePreference.label,
+                        trailing: DropdownButton<PhotoDatePreference>(
+                          value: _datePreference,
+                          dropdownColor: const Color(0xFF1C1C1E),
+                          underline: const SizedBox.shrink(),
+                          onChanged: (value) {
+                            if (value == null) return;
+                            _changeDatePreference(value);
+                          },
+                          items: PhotoDatePreference.values
+                              .map(
+                                (value) => DropdownMenuItem(
+                                  value: value,
+                                  child: Text(value.label),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
                     ],
                     _settingsDivider(),
-                    _settingsRow(Icons.collections_rounded, '每组照片数', '$_groupSize', trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton.filledTonal(onPressed: _groupSize <= 5 ? null : () => _changeGroupSize(_groupSize - 1), icon: const Icon(Icons.remove_rounded)),
-                        const SizedBox(width: 6),
-                        IconButton.filledTonal(onPressed: _groupSize >= 30 ? null : () => _changeGroupSize(_groupSize + 1), icon: const Icon(Icons.add_rounded)),
-                      ],
-                    )),
-                    if (!_isMacOS) ...[
+                    _settingsRow(
+                      Icons.collections_rounded,
+                      '每组照片数',
+                      '$_groupSize',
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton.filledTonal(
+                            onPressed: _groupSize <= 5
+                                ? null
+                                : () => _changeGroupSize(_groupSize - 1),
+                            icon: const Icon(Icons.remove_rounded),
+                          ),
+                          const SizedBox(width: 6),
+                          IconButton.filledTonal(
+                            onPressed: _groupSize >= 30
+                                ? null
+                                : () => _changeGroupSize(_groupSize + 1),
+                            icon: const Icon(Icons.add_rounded),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (_supportsHaptics) ...[
                       _settingsDivider(),
-                      _settingsRow(Icons.vibration_rounded, '振动反馈', _hapticsEnabled ? '开启' : '关闭', trailing: Switch(
-                        value: _hapticsEnabled,
-                        activeThumbColor: const Color(0xFF0A84FF),
-                        onChanged: (value) => setState(() => _hapticsEnabled = value),
-                      )),
+                      _settingsRow(
+                        Icons.vibration_rounded,
+                        '振动反馈',
+                        _hapticsEnabled ? '开启' : '关闭',
+                        trailing: Switch(
+                          value: _hapticsEnabled,
+                          activeThumbColor: const Color(0xFF0A84FF),
+                          onChanged: (value) =>
+                              setState(() => _hapticsEnabled = value),
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -716,11 +915,23 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
               _settingsCard(
                 child: Column(
                   children: [
-                    _settingsRow(Icons.check_circle_outline_rounded, '已筛选', '$_reviewedCount 张'),
+                    _settingsRow(
+                      Icons.check_circle_outline_rounded,
+                      '已筛选',
+                      '$_reviewedCount 张',
+                    ),
                     _settingsDivider(),
-                    _settingsRow(Icons.delete_outline_rounded, '已删除', '$_deletedCount 张'),
+                    _settingsRow(
+                      Icons.delete_outline_rounded,
+                      '已删除',
+                      '$_deletedCount 张',
+                    ),
                     _settingsDivider(),
-                    _settingsRow(Icons.storage_rounded, '节省空间', _formatBytes(_savedBytes)),
+                    _settingsRow(
+                      Icons.storage_rounded,
+                      '节省空间',
+                      _formatBytes(_savedBytes),
+                    ),
                   ],
                 ),
               ),
@@ -730,9 +941,21 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
                   onTap: _restart,
                   child: const Row(
                     children: [
-                      Icon(Icons.delete_outline_rounded, color: Color(0xFFFF453A), size: 22),
+                      Icon(
+                        Icons.delete_outline_rounded,
+                        color: Color(0xFFFF453A),
+                        size: 22,
+                      ),
                       SizedBox(width: 12),
-                      Expanded(child: Text('清空所有已处理记录', style: TextStyle(color: Color(0xFFFF453A), fontWeight: FontWeight.w600))),
+                      Expanded(
+                        child: Text(
+                          '清空所有已处理记录',
+                          style: TextStyle(
+                            color: Color(0xFFFF453A),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -756,7 +979,32 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     return Divider(height: 22, color: Colors.white.withValues(alpha: 0.10));
   }
 
-  Widget _settingsRow(IconData icon, String label, String value, {Widget? trailing}) {
+  Widget _libraryModePicker() {
+    if (_isWindows) {
+      return const Text('文件夹', style: TextStyle(color: Colors.white60));
+    }
+    return DropdownButton<LibraryMode>(
+      value: _libraryMode,
+      dropdownColor: const Color(0xFF1C1C1E),
+      underline: const SizedBox.shrink(),
+      onChanged: (value) {
+        if (value == null) return;
+        setState(() => _libraryMode = value);
+      },
+      items: const [
+        DropdownMenuItem(value: LibraryMode.auto, child: Text('自动')),
+        DropdownMenuItem(value: LibraryMode.system, child: Text('系统图库')),
+        DropdownMenuItem(value: LibraryMode.folder, child: Text('文件夹')),
+      ],
+    );
+  }
+
+  Widget _settingsRow(
+    IconData icon,
+    String label,
+    String value, {
+    Widget? trailing,
+  }) {
     return Row(
       children: [
         Icon(icon, color: Colors.white60, size: 22),
@@ -780,30 +1028,60 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.gesture_rounded, size: 32, color: Color(0xFF0A84FF)),
+              const Icon(
+                Icons.gesture_rounded,
+                size: 32,
+                color: Color(0xFF0A84FF),
+              ),
               const SizedBox(height: 8),
-              const Text('操作提示', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+              const Text(
+                '操作提示',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 18),
               Row(
                 children: [
-                  Expanded(child: _gestureCue(Icons.arrow_back_rounded, '左滑', '下一张')),
+                  Expanded(
+                    child: _gestureCue(Icons.arrow_back_rounded, '左滑', '下一张'),
+                  ),
                   const SizedBox(width: 8),
-                  Expanded(child: _gestureCue(Icons.arrow_upward_rounded, '上滑', '删除')),
+                  Expanded(
+                    child: _gestureCue(Icons.arrow_upward_rounded, '上滑', '删除'),
+                  ),
                   const SizedBox(width: 8),
-                  Expanded(child: _gestureCue(Icons.arrow_forward_rounded, '右滑', '上一张')),
+                  Expanded(
+                    child: _gestureCue(
+                      Icons.arrow_forward_rounded,
+                      '右滑',
+                      '上一张',
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 18),
-              const Text('左滑进入下一张', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const Text(
+                '左滑进入下一张',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 7),
-              const Text('右滑返回上一张', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const Text(
+                '右滑返回上一张',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 7),
-              const Text('上滑标记删除', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const Text(
+                '上滑标记删除',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 8),
               const Text(
                 '每组结束后会二次确认，确认后才会调用系统删除。',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white60, height: 1.35, fontSize: 13),
+                style: TextStyle(
+                  color: Colors.white60,
+                  height: 1.35,
+                  fontSize: 13,
+                ),
               ),
               const SizedBox(height: 18),
               _tipsOptionPanel(),
@@ -812,10 +1090,15 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
                 style: FilledButton.styleFrom(
                   backgroundColor: const Color(0xFF0A84FF),
                   minimumSize: const Size.fromHeight(50),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(999),
+                  ),
                 ),
                 onPressed: _confirmOperationTips,
-                child: const Text('确定', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
+                child: const Text(
+                  '确定',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700),
+                ),
               ),
             ],
           ),
@@ -833,13 +1116,26 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
           Container(
             width: 34,
             height: 34,
-            decoration: BoxDecoration(color: const Color(0xFF0A84FF).withValues(alpha: 0.16), shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: const Color(0xFF0A84FF).withValues(alpha: 0.16),
+              shape: BoxShape.circle,
+            ),
             child: Icon(icon, color: const Color(0xFF0A84FF), size: 20),
           ),
           const SizedBox(height: 7),
-          Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+          ),
           const SizedBox(height: 2),
-          Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.white54, fontWeight: FontWeight.w600)),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 11,
+              color: Colors.white54,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );
@@ -854,7 +1150,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
           _tipsCheckRow('再也不弹出', _neverShowOperationTips, () {
             setState(() {
               _neverShowOperationTips = !_neverShowOperationTips;
-              if (_neverShowOperationTips) _suppressOperationTipsThisWeek = false;
+              if (_neverShowOperationTips) {
+                _suppressOperationTipsThisWeek = false;
+              }
             });
             _hapticSelection();
           }),
@@ -862,7 +1160,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
           _tipsCheckRow('本周不弹出', _suppressOperationTipsThisWeek, () {
             setState(() {
               _suppressOperationTipsThisWeek = !_suppressOperationTipsThisWeek;
-              if (_suppressOperationTipsThisWeek) _neverShowOperationTips = false;
+              if (_suppressOperationTipsThisWeek) {
+                _neverShowOperationTips = false;
+              }
             });
             _hapticSelection();
           }),
@@ -878,9 +1178,18 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
         height: 44,
         child: Row(
           children: [
-            Icon(selected ? Icons.check_circle_rounded : Icons.circle_outlined, color: selected ? const Color(0xFF0A84FF) : Colors.white38, size: 22),
+            Icon(
+              selected ? Icons.check_circle_rounded : Icons.circle_outlined,
+              color: selected ? const Color(0xFF0A84FF) : Colors.white38,
+              size: 22,
+            ),
             const SizedBox(width: 12),
-            Expanded(child: Text(title, style: const TextStyle(fontSize: 16, color: Colors.white70))),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 16, color: Colors.white70),
+              ),
+            ),
           ],
         ),
       ),
@@ -918,7 +1227,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
         type: RequestType.image,
         hasAll: true,
         filterOption: FilterOptionGroup(
-          orders: [const OrderOption(type: OrderOptionType.createDate, asc: false)],
+          orders: [
+            const OrderOption(type: OrderOptionType.createDate, asc: false),
+          ],
         ),
       );
       final albums = paths.toList();
@@ -938,7 +1249,13 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
       final cutoff = _datePreference.cutoff(DateTime.now());
       final filtered = cutoff == null
           ? all
-          : all.where((asset) => asset.createDateTime.isAfter(cutoff) || asset.createDateTime.isAtSameMomentAs(cutoff)).toList();
+          : all
+                .where(
+                  (asset) =>
+                      asset.createDateTime.isAfter(cutoff) ||
+                      asset.createDateTime.isAtSameMomentAs(cutoff),
+                )
+                .toList();
       filtered.shuffle(Random());
 
       final items = await Future.wait(filtered.map(PhotoItem.fromAsset));
@@ -967,7 +1284,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
       final root = Directory(dir);
       final files = await _scanImages(root);
       files.shuffle(Random());
-      final items = files.map((file) => PhotoItem.fromFile(file, root)).toList();
+      final items = files
+          .map((file) => PhotoItem.fromFile(file, root))
+          .toList();
       _applyLoadedItems(items, mode: LibraryMode.folder, root: root);
     } catch (e) {
       setState(() {
@@ -977,11 +1296,17 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     }
   }
 
-  Future<void> _applyLoadedItems(List<PhotoItem> items, {required LibraryMode mode, Directory? root}) async {
+  Future<void> _applyLoadedItems(
+    List<PhotoItem> items, {
+    required LibraryMode mode,
+    Directory? root,
+  }) async {
     if (items.isEmpty) {
       setState(() {
         _rootDirectory = root;
-        _trashDirectory = root == null ? null : Directory(p.join(root.path, '.photolite_trash'));
+        _trashDirectory = root == null
+            ? null
+            : Directory(p.join(root.path, '.photolite_trash'));
         _queue = [];
         _phase = ScreenPhase.empty;
         _statusText = _usesSystemGallery ? '没有可用的图片。' : '这个文件夹里没有可识别的图片。';
@@ -993,7 +1318,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
 
     setState(() {
       _rootDirectory = root;
-      _trashDirectory = root == null ? null : Directory(p.join(root.path, '.photolite_trash'));
+      _trashDirectory = root == null
+          ? null
+          : Directory(p.join(root.path, '.photolite_trash'));
       _queue = items;
       _groupIndex = 0;
       _currentIndex = 0;
@@ -1018,7 +1345,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     await for (final entity in root.list(recursive: true, followLinks: false)) {
       if (entity is File) {
         final normalized = p.normalize(entity.path);
-        if (normalized == trashPath || p.isWithin(trashPath, normalized)) continue;
+        if (normalized == trashPath || p.isWithin(trashPath, normalized)) {
+          continue;
+        }
         final ext = p.extension(entity.path).toLowerCase();
         if (!_supportedExtensions.contains(ext)) continue;
         result.add(entity);
@@ -1065,7 +1394,11 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
   KeyEventResult _handleReviewKeyEvent(FocusNode node, KeyEvent event) {
     final keyboardIntent = _keyboardIntentForKey(event.logicalKey);
     if (keyboardIntent == null) return KeyEventResult.ignored;
-    if (_busy || _phase != ScreenPhase.reviewing || _isAnimatingDecision || _showSettings || _showOperationTips) {
+    if (_busy ||
+        _phase != ScreenPhase.reviewing ||
+        _isAnimatingDecision ||
+        _showSettings ||
+        _showOperationTips) {
       return KeyEventResult.handled;
     }
 
@@ -1084,7 +1417,10 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     final keyboardIntent = _keyboardIntentForKey(key);
     if (keyboardIntent == null) return;
     if (_activeKeyboardKey != null) {
-      if (_isOppositeKeyboardDirection(_activeKeyboardDirection, keyboardIntent.direction)) {
+      if (_isOppositeKeyboardDirection(
+        _activeKeyboardDirection,
+        keyboardIntent.direction,
+      )) {
         _resetDrag();
       }
       return;
@@ -1107,7 +1443,10 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
       _dragTranslation = keyboardIntent.translation;
       _dragOffset = tracked.offset;
       _dragRotationRadians = tracked.rotationRadians;
-      _statusText = _statusTextForDecision(keyboardIntent.decision, keyboardIntent.translation);
+      _statusText = _statusTextForDecision(
+        keyboardIntent.decision,
+        keyboardIntent.translation,
+      );
       _showSwipeHint = true;
       _currentFirstHint = false;
     });
@@ -1131,29 +1470,54 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
 
   KeyboardIntent? _keyboardIntentForKey(LogicalKeyboardKey key) {
     if (key == LogicalKeyboardKey.arrowLeft || key == LogicalKeyboardKey.keyA) {
-      return const KeyboardIntent(SwipeDecision.keep, Offset(-60, 0), KeyboardDirection.left);
+      return const KeyboardIntent(
+        SwipeDecision.keep,
+        Offset(-60, 0),
+        KeyboardDirection.left,
+      );
     }
-    if (key == LogicalKeyboardKey.arrowRight || key == LogicalKeyboardKey.keyD) {
-      return const KeyboardIntent(SwipeDecision.previous, Offset(60, 0), KeyboardDirection.right);
+    if (key == LogicalKeyboardKey.arrowRight ||
+        key == LogicalKeyboardKey.keyD) {
+      return const KeyboardIntent(
+        SwipeDecision.previous,
+        Offset(60, 0),
+        KeyboardDirection.right,
+      );
     }
     if (key == LogicalKeyboardKey.arrowUp || key == LogicalKeyboardKey.keyW) {
-      return const KeyboardIntent(SwipeDecision.delete, Offset(0, -60), KeyboardDirection.up);
+      return const KeyboardIntent(
+        SwipeDecision.delete,
+        Offset(0, -60),
+        KeyboardDirection.up,
+      );
     }
     if (key == LogicalKeyboardKey.arrowDown || key == LogicalKeyboardKey.keyS) {
-      return const KeyboardIntent(SwipeDecision.keep, Offset(0, 60), KeyboardDirection.down);
+      return const KeyboardIntent(
+        SwipeDecision.keep,
+        Offset(0, 60),
+        KeyboardDirection.down,
+      );
     }
     return null;
   }
 
-  bool _isOppositeKeyboardDirection(KeyboardDirection? active, KeyboardDirection incoming) {
-    return (active == KeyboardDirection.left && incoming == KeyboardDirection.right) ||
-        (active == KeyboardDirection.right && incoming == KeyboardDirection.left) ||
-        (active == KeyboardDirection.up && incoming == KeyboardDirection.down) ||
+  bool _isOppositeKeyboardDirection(
+    KeyboardDirection? active,
+    KeyboardDirection incoming,
+  ) {
+    return (active == KeyboardDirection.left &&
+            incoming == KeyboardDirection.right) ||
+        (active == KeyboardDirection.right &&
+            incoming == KeyboardDirection.left) ||
+        (active == KeyboardDirection.up &&
+            incoming == KeyboardDirection.down) ||
         (active == KeyboardDirection.down && incoming == KeyboardDirection.up);
   }
 
   void _handlePanUpdate(DragUpdateDetails details) {
-    if (_busy || _phase != ScreenPhase.reviewing || _isAnimatingDecision) return;
+    if (_busy || _phase != ScreenPhase.reviewing || _isAnimatingDecision) {
+      return;
+    }
     final nextTranslation = _dragTranslation + details.delta;
     final decision = _swipeDecision(nextTranslation);
     final tracked = _trajectoryState(nextTranslation);
@@ -1168,7 +1532,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
   }
 
   void _handlePanEnd(DragEndDetails details) {
-    if (_busy || _phase != ScreenPhase.reviewing || _isAnimatingDecision) return;
+    if (_busy || _phase != ScreenPhase.reviewing || _isAnimatingDecision) {
+      return;
+    }
     final decision = _swipeDecision(_dragTranslation);
     if (decision == SwipeDecision.none) {
       final shouldHintFirst = _isFirstPhotoPreviousAttempt(_dragTranslation);
@@ -1209,7 +1575,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
       );
     }
 
-    final isDeleteArc = translation.dy < 0 && translation.dy.abs() > translation.dx.abs() * 1.05;
+    final isDeleteArc =
+        translation.dy < 0 &&
+        translation.dy.abs() > translation.dx.abs() * 1.05;
     if (isDeleteArc) {
       final rotationDegrees = (translation.dx / 38).clamp(-12.0, 12.0);
       return TrajectoryState(
@@ -1241,7 +1609,10 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     );
   }
 
-  TrajectoryState _exitTrajectoryState(SwipeDecision decision, Offset translation) {
+  TrajectoryState _exitTrajectoryState(
+    SwipeDecision decision,
+    Offset translation,
+  ) {
     final screen = MediaQuery.of(context).size;
     return switch (decision) {
       SwipeDecision.delete => TrajectoryState(
@@ -1256,25 +1627,35 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
         offset: Offset(screen.width + 260, translation.dy * 0.12),
         rotationRadians: 24 * pi / 180,
       ),
-      SwipeDecision.none => const TrajectoryState(offset: Offset.zero, rotationRadians: 0),
+      SwipeDecision.none => const TrajectoryState(
+        offset: Offset.zero,
+        rotationRadians: 0,
+      ),
     };
   }
 
   SwipeDecision _swipeDecision(Offset translation) {
-    final distance = sqrt(translation.dx * translation.dx + translation.dy * translation.dy);
+    final distance = sqrt(
+      translation.dx * translation.dx + translation.dy * translation.dy,
+    );
     if (distance < 44) return SwipeDecision.none;
 
-    final horizontalDominance = translation.dx.abs() >= translation.dy.abs() * 0.72;
-    final verticalDominance = translation.dy.abs() >= translation.dx.abs() * 0.72;
+    final horizontalDominance =
+        translation.dx.abs() >= translation.dy.abs() * 0.72;
+    final verticalDominance =
+        translation.dy.abs() >= translation.dx.abs() * 0.72;
 
     if (horizontalDominance && translation.dx <= -38) return SwipeDecision.keep;
-    if (horizontalDominance && translation.dx >= 38 && _history.isNotEmpty) return SwipeDecision.previous;
+    if (horizontalDominance && translation.dx >= 38 && _history.isNotEmpty) {
+      return SwipeDecision.previous;
+    }
     if (verticalDominance && translation.dy <= -38) return SwipeDecision.delete;
     return SwipeDecision.none;
   }
 
   bool _isFirstPhotoPreviousAttempt(Offset translation) {
-    final horizontalDominance = translation.dx.abs() >= translation.dy.abs() * 0.72;
+    final horizontalDominance =
+        translation.dx.abs() >= translation.dy.abs() * 0.72;
     return horizontalDominance && translation.dx >= 34 && _history.isEmpty;
   }
 
@@ -1283,7 +1664,10 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
       SwipeDecision.delete => '删除',
       SwipeDecision.keep => '下一张',
       SwipeDecision.previous => '上一张',
-      SwipeDecision.none => _isFirstPhotoPreviousAttempt(translation) ? '这是第一张' : '左滑下一张 · 右滑上一张 · 上滑删除',
+      SwipeDecision.none =>
+        _isFirstPhotoPreviousAttempt(translation)
+            ? '这是第一张'
+            : '左滑下一张 · 右滑上一张 · 上滑删除',
     };
   }
 
@@ -1431,7 +1815,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
 
   Future<void> _confirmDelete() async {
     if (_busy) return;
-    final deleteItems = _activeDeleteGroup.where((e) => !_preservedInConfirm.contains(e.id)).toList();
+    final deleteItems = _activeDeleteGroup
+        .where((e) => !_preservedInConfirm.contains(e.id))
+        .toList();
     if (deleteItems.isEmpty) {
       setState(() {
         _phase = ScreenPhase.reviewing;
@@ -1448,20 +1834,20 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     int bytes = 0;
     try {
       if (_usesSystemGallery) {
-        final result = await PhotoManager.editor.deleteWithIds(deleteItems.map((e) => e.id).toList());
+        final result = await PhotoManager.editor.deleteWithIds(
+          deleteItems.map((e) => e.id).toList(),
+        );
         bytes = deleteItems.fold(0, (sum, item) => sum + item.sizeBytes);
         if (result.isEmpty) {
           throw StateError('系统取消了删除');
         }
       } else {
-        await _trashDirectory?.create(recursive: true);
         for (final item in deleteItems) {
           final source = File(item.filePath!);
           if (!await source.exists()) continue;
           final stat = await source.stat();
           bytes += stat.size;
-          final target = await _uniqueTrashPath(item);
-          await source.rename(target);
+          await _deleteFolderItem(source, item);
         }
       }
 
@@ -1503,7 +1889,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     if (next == _groupSize) return;
     setState(() => _groupSize = next);
     if (_queue.isNotEmpty) {
-      final preservedQueue = _queue.where((entry) => entry.existsSync()).toList();
+      final preservedQueue = _queue
+          .where((entry) => entry.existsSync())
+          .toList();
       preservedQueue.shuffle(Random(_groupSize * 17));
       setState(() {
         _queue = preservedQueue;
@@ -1544,10 +1932,7 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
         return;
       }
       await SharePlus.instance.share(
-        ShareParams(
-          title: '分享照片',
-          files: [XFile(file.path)],
-        ),
+        ShareParams(title: '分享照片', files: [XFile(file.path)]),
       );
       _hapticLight();
     } catch (e) {
@@ -1557,7 +1942,9 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
   }
 
   Future<String> _uniqueTrashPath(PhotoItem item) async {
-    final trash = _trashDirectory ?? Directory(p.join(_rootDirectory!.path, '.photolite_trash'));
+    final trash =
+        _trashDirectory ??
+        Directory(p.join(_rootDirectory!.path, '.photolite_trash'));
     await trash.create(recursive: true);
     final base = p.basenameWithoutExtension(item.filePath!);
     final ext = p.extension(item.filePath!);
@@ -1568,6 +1955,46 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
       counter += 1;
     }
     return candidate;
+  }
+
+  Future<void> _deleteFolderItem(File source, PhotoItem item) async {
+    if (_isWindows) {
+      try {
+        await _moveToWindowsRecycleBin(source);
+        return;
+      } catch (_) {
+        // Fall back to an app-local trash folder so confirmation never becomes
+        // a permanent delete if Windows Recycle Bin integration is unavailable.
+      }
+    }
+    final target = await _uniqueTrashPath(item);
+    await source.rename(target);
+  }
+
+  Future<void> _moveToWindowsRecycleBin(File source) async {
+    final result = await Process.run('powershell.exe', [
+      '-NoProfile',
+      '-NonInteractive',
+      '-ExecutionPolicy',
+      'Bypass',
+      '-Command',
+      r'''
+param([string]$Path)
+Add-Type -AssemblyName Microsoft.VisualBasic
+[Microsoft.VisualBasic.FileIO.FileSystem]::DeleteFile(
+  $Path,
+  [Microsoft.VisualBasic.FileIO.UIOption]::OnlyErrorDialogs,
+  [Microsoft.VisualBasic.FileIO.RecycleOption]::SendToRecycleBin
+)
+''',
+      source.path,
+    ], runInShell: false);
+    if (result.exitCode != 0) {
+      throw FileSystemException(
+        'Failed to move file to Windows Recycle Bin',
+        source.path,
+      );
+    }
   }
 
   void _restart() {
@@ -1588,13 +2015,33 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
     _hapticLight();
   }
 
-  void _hapticLight() { if (_hapticsEnabled) HapticFeedback.lightImpact(); }
-  void _hapticMedium() { if (_hapticsEnabled) HapticFeedback.mediumImpact(); }
-  void _hapticDelete() { if (_hapticsEnabled) HapticFeedback.heavyImpact(); }
-  void _hapticSuccess() { if (_hapticsEnabled) HapticFeedback.vibrate(); }
-  void _hapticWarning() { if (_hapticsEnabled) HapticFeedback.selectionClick(); }
-  void _hapticError() { if (_hapticsEnabled) HapticFeedback.vibrate(); }
-  void _hapticSelection() { if (_hapticsEnabled) HapticFeedback.selectionClick(); }
+  void _hapticLight() {
+    if (_supportsHaptics && _hapticsEnabled) HapticFeedback.lightImpact();
+  }
+
+  void _hapticMedium() {
+    if (_supportsHaptics && _hapticsEnabled) HapticFeedback.mediumImpact();
+  }
+
+  void _hapticDelete() {
+    if (_supportsHaptics && _hapticsEnabled) HapticFeedback.heavyImpact();
+  }
+
+  void _hapticSuccess() {
+    if (_supportsHaptics && _hapticsEnabled) HapticFeedback.vibrate();
+  }
+
+  void _hapticWarning() {
+    if (_supportsHaptics && _hapticsEnabled) HapticFeedback.selectionClick();
+  }
+
+  void _hapticError() {
+    if (_supportsHaptics && _hapticsEnabled) HapticFeedback.vibrate();
+  }
+
+  void _hapticSelection() {
+    if (_supportsHaptics && _hapticsEnabled) HapticFeedback.selectionClick();
+  }
 
   String _formatBytes(int bytes) {
     if (bytes <= 0) return '0 B';
@@ -1609,6 +2056,7 @@ class _PhotoLiteHomeState extends State<PhotoLiteHome> {
   }
 
   String _libraryModeLabel() {
+    if (_isWindows) return '文件夹';
     return switch (_libraryMode) {
       LibraryMode.auto => (_isAndroid || _isMacOS) ? '自动：系统图库' : '自动：文件夹',
       LibraryMode.system => '系统图库',
@@ -1635,7 +2083,9 @@ class PhotoItem {
       displayName: p.basename(file.path),
       modifiedAt: stat.modified,
       sizeBytes: stat.size,
-      locationText: p.dirname(file.path) == root.path ? null : p.relative(p.dirname(file.path), from: root.path),
+      locationText: p.dirname(file.path) == root.path
+          ? null
+          : p.relative(p.dirname(file.path), from: root.path),
       filePath: file.path,
     );
   }
@@ -1655,7 +2105,9 @@ class PhotoItem {
       displayName: asset.title ?? asset.id,
       modifiedAt: asset.createDateTime,
       sizeBytes: bytes,
-      locationText: asset.latitude != null && asset.longitude != null ? '${asset.latitude!.toStringAsFixed(5)}, ${asset.longitude!.toStringAsFixed(5)}' : null,
+      locationText: asset.latitude != null && asset.longitude != null
+          ? '${asset.latitude!.toStringAsFixed(5)}, ${asset.longitude!.toStringAsFixed(5)}'
+          : null,
       asset: asset,
     );
   }
@@ -1683,7 +2135,11 @@ class PhotoItem {
           );
         },
         errorBuilder: (_, _, _) => const Center(
-          child: Icon(Icons.broken_image_rounded, size: 80, color: Colors.white38),
+          child: Icon(
+            Icons.broken_image_rounded,
+            size: 80,
+            color: Colors.white38,
+          ),
         ),
       );
     }
@@ -1691,7 +2147,11 @@ class PhotoItem {
       File(filePath!),
       fit: fit,
       errorBuilder: (_, _, _) => const Center(
-        child: Icon(Icons.broken_image_rounded, size: 80, color: Colors.white38),
+        child: Icon(
+          Icons.broken_image_rounded,
+          size: 80,
+          color: Colors.white38,
+        ),
       ),
     );
   }

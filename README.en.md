@@ -52,7 +52,7 @@ Latest version: `1.0.0`
 | Android | `PhotoLite-Android-preview.apk` | Preview build available |
 | macOS | `PhotoLite-macOS-release.dmg` | Preview build available |
 | iPhone | Run with Xcode, then distribute with TestFlight or App Store | Source available |
-| Windows | No installer yet | Project files included |
+| Windows | No installer yet | Folder mode is implemented and can be built on Windows |
 
 Download:
 
@@ -69,7 +69,7 @@ See [docs/INSTALL.md](docs/INSTALL.md) for detailed installation instructions.
 - Photo metadata display, including date, dimensions, file size, and available location information.
 - Optional date-range filtering, such as recent month, three months, half year, one year, or five years.
 - Optional haptic feedback on supported mobile devices.
-- Keyboard support on macOS, including arrow keys and WASD.
+- Keyboard support on macOS and Windows, including arrow keys and WASD.
 - Local-first design with no backend service.
 
 ## Deletion Safety
@@ -148,11 +148,23 @@ Build macOS:
 flutter build macos --release
 ```
 
+Build Windows:
+
+```powershell
+flutter build windows --release
+```
+
 Project scripts:
 
 ```bash
 ./scripts/build_flutter_android_apk.sh
 ./scripts/build_flutter_macos_dmg.sh
+```
+
+The Windows packaging script must be run from Windows PowerShell:
+
+```powershell
+.\scripts\build_flutter_windows_zip.ps1
 ```
 
 Release signing material is intentionally not checked into the repository. Configure your own Android keystore, Apple signing team, Developer ID certificate, or store-managed signing outside the repo.

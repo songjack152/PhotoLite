@@ -9,7 +9,7 @@
 ## Flutter 版本目标
 - Android：读取系统相册，滑动筛选，二次确认，通过系统能力删除。
 - macOS：读取系统“照片”图库，滑动筛选，二次确认，通过系统能力删除；文件夹模式作为备用。
-- Windows：选择文件夹，滑动筛选，二次确认，后续改为回收站或安装包分发。
+- Windows：选择文件夹，滑动筛选，二次确认，确认后优先移动到 Windows 回收站。
 
 ## 环境要求
 - Flutter SDK
@@ -37,5 +37,5 @@ flutter build apk --debug
 
 ## 后续要补的能力
 - macOS/Windows 正式安装包签名。
-- Windows 回收站移动能力。
-- Windows 端完整验证。
+- Windows 安装包签名。
+- Windows 端完整验证和自动化打包发布。
