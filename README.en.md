@@ -52,7 +52,7 @@ Latest version: `1.0.0`
 | Android | `PhotoLite-Android-preview.apk` | Preview build available |
 | macOS | `PhotoLite-macOS-release.dmg` | Preview build available |
 | iPhone | Run with Xcode, then distribute with TestFlight or App Store | Source available |
-| Windows | No installer yet | Folder mode is implemented and can be built on Windows |
+| Windows | `PhotoLite-Windows-release.zip` | Preview build available |
 
 Download:
 
